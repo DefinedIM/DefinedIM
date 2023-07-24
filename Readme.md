@@ -23,6 +23,7 @@ Gradle
 ## 使用的其他开源仓库
 - [libsm](https://kgithub.com/citahub/libsm/)
 - [blake3](https://github.com/blake3-team/blake3)
+- [fastjson2](https://github.com/alibaba/fastjson2)
 
 ## License
 代码以`MPL 2.0`协议发布
