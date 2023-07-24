@@ -24,3 +24,34 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+def createDir = {
+    path->
+    File dir = new File(path)
+    if (!dir.exists()) {
+        dir.mkdirs()
+    }
+}
+
+task buildNativeRust {
+    createDir "${rootDir}\\bin\\main\\org\\defineim\\native\\"
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        exec {
+        ExecSpec execSpec ->
+            executable 'cmd'
+            args '/c', "cd ${rootDir}\\native\\rust && cargo build"
+            standardOutput = out
+        }
+        ant.move file: "${rootDir}\\native\\rust\\target\\debug\\crypt_utility.dll",
+                todir: "${rootDir}\\bin\\main\\org\\definedim\\native\\"
+    } else {
+        exec {
+        ExecSpec execSpec ->
+            executable 'sh'
+            args '-c', "cd ${rootDir}\\native\\rust && cargo build"
+            standardOutput = out
+        }
+        ant.move file: "${rootDir}\\native\\rust\\target\\debug\\crypt_utility.so",
+                todir: "${rootDir}\\bin\\main\\org\\definedim\\native\\"
+    }
+}

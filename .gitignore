@@ -32,3 +32,8 @@ hs_err_pid*
 # target
 .gradle/
 build/
+native/rust/target
+/bin
+
+# Rust Cargo tmp
+Cargo.lock
