@@ -2,13 +2,14 @@ package org.definedim;
 
 import org.definedim.crypto.RustSM2Crypto;
 import org.definedim.exception.NativeLoadingException;
+import org.definedim.file.TextFileReader;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            RustSM2Crypto rustSM2Crypto = new RustSM2Crypto();
-            System.out.println(rustSM2Crypto.getBlake3Sum("12233234234"));
-        } catch (NativeLoadingException e) {
+            TextFileReader tfr = new TextFileReader("build.gradle");
+            System.out.println(tfr.readAll());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
