@@ -7,7 +7,7 @@ use jni::JNIEnv;
 // Blake3 Hash
 
 #[no_mangle]
-pub unsafe extern "C" fn Java_org_definedim_Crypto_getBlake3Sum<'a>(
+pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_getBlake3Sum<'a>(
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
     j_str: JString<'a>,
@@ -25,7 +25,7 @@ use rustc_serialize::hex::FromHex;
 use rustc_serialize::hex::ToHex;
 #[no_mangle]
 
-pub unsafe extern "C" fn Java_org_definedim_Crypto_newSecretKey<'a>(
+pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_newSecretKey<'a>(
     env: JNIEnv<'a>,
     _class: JClass<'a>,
 ) -> JString<'a> {
@@ -37,7 +37,7 @@ pub unsafe extern "C" fn Java_org_definedim_Crypto_newSecretKey<'a>(
 
 // Generate a public key from a secret key
 #[no_mangle]
-pub unsafe extern "C" fn Java_org_definedim_Crypto_genPublicKey<'a>(
+pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_genPublicKey<'a>(
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
     secret_key_java: JString<'a>,
@@ -61,7 +61,7 @@ pub unsafe extern "C" fn Java_org_definedim_Crypto_genPublicKey<'a>(
 
 // encrypt a string
 #[no_mangle]
-pub unsafe extern "C" fn Java_org_definedim_Crypto_encryptString<'a>(
+pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_encryptString<'a>(
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
     public_key_java: JString<'a>,
@@ -92,7 +92,7 @@ pub unsafe extern "C" fn Java_org_definedim_Crypto_encryptString<'a>(
 
 // decrypt a string
 #[no_mangle]
-pub unsafe extern "C" fn Java_org_definedim_Crypto_decryptString<'a>(
+pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_decryptString<'a>(
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
     secret_key_java: JString<'a>,
