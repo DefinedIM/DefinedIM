@@ -25,38 +25,33 @@ public class RustSM2Crypto {
     }
 
     /**
-     *
-     * @param a string 
-     * @return blake3 hash sum of the string
+     * @param str a string
+     * @return blake3 hash sum of the str
      */
     public native String getBlake3Sum(String str);
 
-    /**
-     *
-     * @return a new secret key(HEX)
+    /** generate a new secret key
+     * @return a new secret key (HEX without leading 0x)
      */
     public native String newSecretKey();
 
-    /**
-     *
-     * @param a secret key(HEX)
-     * @return a public key(HEX)
+    /** get public key by secret key
+     * @param str secret key (HEX without leading 0x)
+     * @return a public key (HEX without leading 0x)
      */
     public native String genPublicKey(String str);
 
     /**
-     *
-     * @param a public key(HEX)
-     * @param the data that need to be encrypt
-     * @return
+     * @param pubKey public key (HEX without leading 0x)
+     * @param rawData the data which needs to be encrypted
+     * @return encrypted string
      */
     public native String encryptString(String pubKey, String rawData);
 
     /**
-     *
-     * @param secKey(HEX)
-     * @param encryptedData the data that need to be decrypt
-     * @return
+     * @param secKey secret key (HEX without leading 0x)
+     * @param encryptedData the data which needs to be decrypted
+     * @return decrypted string
      */
     public native String decryptString(String secKey, String encryptedData);
 }
