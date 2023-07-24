@@ -36,7 +36,7 @@ class ServerListenThread extends Thread {
 
     @Override
     public void run() {
-        System.out.println("socket server listen thread started.");
+//        System.out.println("socket server listen thread started.");
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             while (true) {
