@@ -19,3 +19,6 @@
 JDK 17  
 Rust ~~nightly~~ 任意通道最新工具链  
 Gradle
+
+## License
+代码以`MPL 2.0`协议发布
