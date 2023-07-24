@@ -20,5 +20,9 @@ JDK 17
 Rust ~~nightly~~ 任意通道最新工具链  
 Gradle
 
+## 使用的其他开源仓库
+- [libsm](https://kgithub.com/citahub/libsm/)
+- [blake3](https://github.com/blake3-team/blake3)
+
 ## License
 代码以`MPL 2.0`协议发布
