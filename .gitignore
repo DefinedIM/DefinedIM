@@ -40,3 +40,6 @@ native/rust/target
 
 # Rust Cargo tmp
 Cargo.lock
+
+# config file
+#config.json
