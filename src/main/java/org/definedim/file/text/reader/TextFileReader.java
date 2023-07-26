@@ -1,4 +1,4 @@
-package org.definedim.file.reader;
+package org.definedim.file.text.reader;
 
 import java.io.*;
 
