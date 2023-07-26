@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SocketServer {
+    private boolean running = false;
     private int port;
     private ServerListenThread thread;
     private SocketHandler handler;
@@ -16,12 +17,21 @@ public class SocketServer {
     }
 
     public void start() {
+        running = true;
         thread.start();
     }
 
+    /**
+     * 不再接受新的连接请求,已有连接仍会处理.
+     */
     public void stop() {
+        running = false;
         thread.stop();
         thread = new ServerListenThread(port, handler);
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }
 
@@ -44,6 +54,7 @@ class ServerListenThread extends Thread {
                 new Thread(() -> {
                     //异步处理连接
                     handler.handle(socket);
+
                 }).start();
             }
         } catch (IOException e) {
