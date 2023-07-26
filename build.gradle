@@ -38,7 +38,7 @@ def createDir = {
 
 task buildNativeRust {
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        createDir "${rootDir}\\bin\\main\\definedim\\native\\"
+//        createDir "${rootDir}\\bin\\main\\definedim\\native\\"
         exec {
         ExecSpec execSpec ->
             executable 'cmd'
@@ -46,9 +46,9 @@ task buildNativeRust {
             standardOutput = out
         }
         ant.move file: "${rootDir}\\native\\rust\\target\\debug\\sm2_crypto.dll",
-                todir: "${rootDir}\\bin\\main\\definedim\\native\\"
+                todir: "${rootDir}\\native\\"
     } else {
-        createDir "${rootDir}/bin/main/definedim/native/"
+//        createDir "${rootDir}/bin/main/definedim/native/"
         exec {
         ExecSpec execSpec ->
             executable 'sh'
@@ -56,6 +56,6 @@ task buildNativeRust {
             standardOutput = out
         }
         ant.move file: "${rootDir}/native/rust/target/debug/sm2_crypto.so",
-                todir: "${rootDir}/bin/main/definedim/native/"
+                todir: "${rootDir}/native/"
     }
 }
