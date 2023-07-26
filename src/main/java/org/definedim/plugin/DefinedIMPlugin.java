@@ -7,6 +7,7 @@ public class DefinedIMPlugin {
      * 在插件被加载时被调用,将阻塞主线程
      */
     public void onRegister() {
+        System.out.println("plugin load done!");
     }
 
     /**

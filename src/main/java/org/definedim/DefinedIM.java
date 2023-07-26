@@ -32,6 +32,7 @@ public class DefinedIM {
 
         //加载插件
         pluginManager = new PluginManager();
+        pluginManager.load();
 
     }
 
