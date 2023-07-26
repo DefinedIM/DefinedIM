@@ -31,7 +31,7 @@ public class TextFileReader {
     }
 
     /**
-     * 设置文件读取编码
+     * 设置文件读取编码,并复位读指针
      *
      * @param charsetName
      */
