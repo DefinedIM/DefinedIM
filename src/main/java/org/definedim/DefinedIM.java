@@ -1,19 +1,38 @@
 package org.definedim;
 
 import org.definedim.config.DefinedIMConfig;
+import org.definedim.crypto.RustSM2Crypto;
+import org.definedim.exception.NativeLoadingException;
 import org.definedim.net.socket.SocketHandler;
 import org.definedim.net.socket.SocketServer;
+import org.definedim.plugin.PluginManager;
 
 import java.io.*;
 import java.net.Socket;
 
 public class DefinedIM {
-    public DefinedIMConfig definedIMConfig;
+    public static DefinedIMConfig definedIMConfig;
 
-    public SocketServer socketServer;
+    public static SocketServer socketServer;
 
-    public DefinedIM() {
+    public static RustSM2Crypto rustSM2Crypto;
+
+    public static PluginManager pluginManager;
+
+    static{
+        // 加载配置
         definedIMConfig = DefinedIMConfig.byJSONFile(new File("config.json"));
+
+        // 加载native库
+        try {
+            rustSM2Crypto = new RustSM2Crypto();
+        } catch (NativeLoadingException e) {
+            throw new RuntimeException(e);
+        }
+
+        //加载插件
+        pluginManager = new PluginManager();
+
     }
 
     /**

@@ -1,10 +1,14 @@
 package org.definedim;
 
-import org.definedim.file.reader.TextFileReader;
-
 public class Main {
     public static void main(String[] args) {
-        DefinedIM definedIM = new DefinedIM();
-        definedIM.start();
+        DefinedIM definedIM = null;
+        try {
+            definedIM = new DefinedIM();
+            definedIM.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+
 }

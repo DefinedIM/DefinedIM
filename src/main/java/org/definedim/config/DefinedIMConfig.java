@@ -1,7 +1,7 @@
 package org.definedim.config;
 
 import com.alibaba.fastjson2.JSON;
-import org.definedim.file.reader.TextFileReader;
+import org.definedim.file.text.reader.TextFileReader;
 
 import java.io.File;
 
