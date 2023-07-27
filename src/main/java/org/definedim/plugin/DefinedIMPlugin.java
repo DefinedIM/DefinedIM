@@ -1,13 +1,12 @@
 package org.definedim.plugin;
 
 public class DefinedIMPlugin {
-    public DefinedIMPluginConfig config;
+    public DefinedIMPluginConfig config; // 这项将会在插件加载的时候从plugin.json读取
 
     /**
      * 在插件被加载时被调用,将阻塞主线程
      */
     public void onRegister() {
-        System.out.println("plugin load done!");
     }
 
     /**

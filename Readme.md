@@ -20,6 +20,12 @@ JDK 17
 Rust ~~nightly~~ 任意通道最新工具链  
 Gradle
 
+### 打包
+```
+gradlew shadowJar
+```
+生成的`jar`文件位于`build/libs/`,可以直接运行
+
 ## 使用的其他开源仓库
 - [libsm](https://kgithub.com/citahub/libsm/)
 - [blake3](https://github.com/blake3-team/blake3)

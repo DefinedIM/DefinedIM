@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -11,7 +12,8 @@ import java.util.zip.*;
 
 public class PluginManager {
     File pluginDir;
-    ArrayList<DefinedIMPlugin> pluginList;
+    ArrayList<DefinedIMPlugin> pluginList = new ArrayList<>();
+    int pluginCount = 0;
 
     public void load() {
         // 目录
@@ -30,7 +32,16 @@ public class PluginManager {
                     System.out.println("can't load jar file " + pluginfile.getName() + " as a plugin!");
                 }
             } else {
-                System.out.println("unknown plugin file " + pluginfile.getName());
+                //System.out.println("unknown plugin file " + pluginfile.getName());
+            }
+        }
+
+        System.out.println("loaded " + pluginCount + " plugins from ./plugins/ , listed here:");
+        if (pluginCount == 0) {
+            System.out.println("  (none)");
+        } else {
+            for (int i = 0; i < pluginCount; i++) {
+                System.out.println("  " + (i + 1) + ". " + pluginList.get(i).config.name + ":" + pluginList.get(i).config.version);
             }
         }
     }
@@ -64,14 +75,17 @@ public class PluginManager {
                     }
                     break;
                 }
-                zis.closeEntry(); // 关闭zipEntry
+                zis.closeEntry();
             }
-            zis.close(); //关闭zipInputStream
+            zis.close();
 
             if (config != null) {
                 loadJar(pluginFile.getAbsolutePath());
                 Class<?> aClass = Class.forName(config.classpath);
                 DefinedIMPlugin plugin = (DefinedIMPlugin) aClass.newInstance();
+                pluginCount++;
+                plugin.config = config;
+                pluginList.add(plugin);
                 plugin.onRegister();
             } else {
                 System.out.println("config load failed. (" + pluginFile.getName() + ")");
@@ -85,26 +99,6 @@ public class PluginManager {
     }
 
     void loadJar(String jarPath) {
-        File jarFile = new File(jarPath);
-        // 从URLClassLoader类中获取类所在文件夹的方法，jar也可以认为是一个文件夹
-        Method method = null;
-        try {
-            method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-        } catch (NoSuchMethodException | SecurityException e1) {
-            e1.printStackTrace();
-        }
-        // 获取方法的访问权限以便写回
-        boolean accessible = method.isAccessible();
-        try {
-            method.setAccessible(true);
-            // 获取系统类加载器
-            URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            URL url = jarFile.toURI().toURL();
-            method.invoke(classLoader, url);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            method.setAccessible(accessible);
-        }
+       
     }
 }
