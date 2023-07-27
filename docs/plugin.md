@@ -2,6 +2,8 @@
 
 开发插件需要依赖本仓库的jar包.
 
+[示范插件](https://github.com/DefinedIM/DefinedIM_ExamplePlugin)
+
 需要您实现一个继承自`org.definedim.plugin.DefinedIMPlugin`的类, 其中有一些函数需要实现:
 
 + `void onRegister()`
