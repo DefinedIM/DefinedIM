@@ -39,18 +39,18 @@ public class DefinedIM {
     /**
      * 启动DefinedIM主程序
      */
-    public void start() {
+    public static void start() {
         startSocketServer();
     }
 
     /**
      * 停止DefinedIM主程序
      */
-    public void stop(){
+    public static void stop(){
         socketServer.stop();
     }
 
-    private void startSocketServer() {
+    private static void startSocketServer() {
         socketServer = new SocketServer(definedIMConfig.socketPort, new DefinedIMSocketHandler());
         socketServer.start();
     }
