@@ -94,7 +94,7 @@ public class PluginManager {
                 pluginCount++;
                 plugin.config = config;
                 pluginList.add(plugin);
-                plugin.onRegister();
+                plugin.onLoad();
                 return true;
             } else {
                 System.out.println("plugin config load failed. (" + pluginFile.getName() + ")");
@@ -112,7 +112,8 @@ public class PluginManager {
         // 得到出程序类加载器
         ClassLoader parentClassLoader = DefinedIM.class.getClassLoader();
         // 创建一个URLClassLoader对象，传入url作为参数
-        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url}, parentClassLoader);
+//        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url}, parentClassLoader);
+        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url}, ClassLoader.getSystemClassLoader());
         // 创建一个List<Class<?>>对象，用于存放加载的类
         List<Class<?>> classes = new ArrayList<>();
         // 判断url的协议是否是jar
