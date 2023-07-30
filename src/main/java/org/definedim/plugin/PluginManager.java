@@ -94,6 +94,7 @@ public class PluginManager {
                 pluginCount++;
                 plugin.config = config;
                 pluginList.add(plugin);
+                plugin.init(DefinedIM.definedIMServer);
                 plugin.onLoad();
                 return true;
             } else {
@@ -115,7 +116,7 @@ public class PluginManager {
 //        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url}, parentClassLoader);
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url}, ClassLoader.getSystemClassLoader());
         // 创建一个List<Class<?>>对象，用于存放加载的类
-        List<Class<?>> classes = new ArrayList<>();
+//        List<Class<?>> classes = new ArrayList<>();
         // 判断url的协议是否是jar
         if (/*url.getProtocol().equals("jar")*/true) {
             // 获取jar文件对象
@@ -136,8 +137,8 @@ public class PluginManager {
                     // 使用URLClassLoader的loadClass方法来加载这个类文件
                     Class<?> clazz = urlClassLoader.loadClass(className);
                     // 将加载的类添加到List中
-                    classes.add(clazz);
-                    System.out.println(clazz.getName());
+//                    classes.add(clazz);
+//                    System.out.println(clazz.getName());
                 }
             }
         }

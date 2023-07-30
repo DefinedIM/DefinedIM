@@ -10,7 +10,7 @@ import org.definedim.plugin.PluginManager;
 import java.io.*;
 import java.net.Socket;
 
-public class DefinedIMServer implements DefinedIMServerInterface{
+public class DefinedIMServer{
     public DefinedIMConfig definedIMConfig;
 
     public SocketServer socketServer;
