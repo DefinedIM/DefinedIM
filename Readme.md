@@ -29,7 +29,7 @@ gradlew shadowJar
 生成的`jar`文件位于`build/libs/`,可以直接运行
 
 ## 使用的其他开源仓库
-- [libsm](https://kgithub.com/citahub/libsm/)
+- [libsm](https://github.com/citahub/libsm/)
 - [blake3](https://github.com/blake3-team/blake3)
 - [fastjson2](https://github.com/alibaba/fastjson2)
 - [log4j](https://github.com/apache/logging-log4j2)
