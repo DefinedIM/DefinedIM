@@ -40,11 +40,10 @@ public class PluginManager {
                 } else {
                     System.out.println("can't load jar file " + pluginfile.getName() + " as a plugin!");
                 }
-            } else {
-                //System.out.println("unknown plugin file " + pluginfile.getName());
             }
         }
 
+        // 输出概要信息
         System.out.println("loaded " + pluginCount + " plugins from ./plugins/ , listed here:");
         if (pluginCount == 0) {
             System.out.println("  (none)");
@@ -52,6 +51,11 @@ public class PluginManager {
             for (int i = 0; i < pluginCount; i++) {
                 System.out.println("  " + (i + 1) + ". " + pluginList.get(i).config.name + ":" + pluginList.get(i).config.version);
             }
+        }
+
+        // 调用每个插件的onLoad()方法
+        for (DefinedIMPlugin definedIMPlugin : pluginList) {
+            definedIMPlugin.onLoad();
         }
     }
 
@@ -80,6 +84,7 @@ public class PluginManager {
                     String content = sb.toString();
                     config = JSON.parseObject(content, DefinedIMPluginConfig.class);
                     if (config == null) {
+                        // 此时无法解析配置的JSON文件
                         System.out.println("plugin.json from " + pluginFile.getName() + " is illegal.");
                         return false;
                     }
@@ -96,9 +101,9 @@ public class PluginManager {
                 plugin.config = config;
                 pluginList.add(plugin);
                 plugin.init(DefinedIM.definedIMServer);
-                plugin.onLoad();
                 return true;
             } else {
+                // 此时jar中没有plugin.json
                 System.out.println("can't find plugin.json in " + pluginFile.getName());
             }
         } catch (Exception e) {
@@ -114,7 +119,7 @@ public class PluginManager {
      * @return 使用的类加载器
      * @throws Exception
      */
-    public static URLClassLoader loadJar(File _jarFile) throws Exception {
+    static URLClassLoader loadJar(File _jarFile) throws Exception {
         URL url = _jarFile.toURI().toURL();
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url}, ClassLoader.getSystemClassLoader());
         JarFile jarFile = new JarFile(_jarFile);
@@ -139,8 +144,21 @@ public class PluginManager {
         return urlClassLoader;
     }
 
+    /**
+     * 得到所有加载的插件
+     * @return
+     */
     public ArrayList<DefinedIMPlugin> getPluginList() {
         return pluginList;
+    }
+
+    /**
+     * 终止所有插件运行
+     */
+    public void stop() {
+        for (DefinedIMPlugin definedIMPlugin : pluginList) {
+            definedIMPlugin.onExit();
+        }
     }
 
 }

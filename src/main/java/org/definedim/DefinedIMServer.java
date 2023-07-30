@@ -10,7 +10,7 @@ import org.definedim.plugin.PluginManager;
 import java.io.*;
 import java.net.Socket;
 
-public class DefinedIMServer{
+public class DefinedIMServer {
     public DefinedIMConfig definedIMConfig;
 
     public SocketServer socketServer;
@@ -42,6 +42,7 @@ public class DefinedIMServer{
 
     public void stop() {
         socketServer.stop();
+        pluginManager.stop();
         System.out.println("Server stopped.");
     }
 
