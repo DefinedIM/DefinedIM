@@ -18,13 +18,15 @@ import java.util.jar.JarFile;
 import java.util.zip.*;
 
 public class PluginManager {
-    File pluginDir;
     ArrayList<DefinedIMPlugin> pluginList = new ArrayList<>();
     int pluginCount = 0;
 
+    /**
+     * 加载./plugins/下的jar文件作为插件
+     */
     public void load() {
         // 目录
-        pluginDir = new File("./plugins/");
+        File pluginDir = new File("./plugins/");
         if (!pluginDir.isDirectory()) {
             pluginDir.mkdirs();
         }
@@ -78,7 +80,7 @@ public class PluginManager {
                     String content = sb.toString();
                     config = JSON.parseObject(content, DefinedIMPluginConfig.class);
                     if (config == null) {
-                        System.out.println("can't understand plugin.json as config from " + pluginFile.getName());
+                        System.out.println("plugin.json from " + pluginFile.getName() + " is illegal.");
                         return false;
                     }
                     break;
@@ -86,7 +88,6 @@ public class PluginManager {
                 zis.closeEntry();
             }
             zis.close();
-
             if (config != null) {
                 URLClassLoader urlClassLoader = loadJar(pluginFile);
                 Class aClass = urlClassLoader.loadClass(config.classpath);
@@ -98,69 +99,48 @@ public class PluginManager {
                 plugin.onLoad();
                 return true;
             } else {
-                System.out.println("plugin config load failed. (" + pluginFile.getName() + ")");
+                System.out.println("can't find plugin.json in " + pluginFile.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
         return false;
     }
 
+    /**
+     * 加载jar文件到JVM
+     *
+     * @param _jarFile
+     * @return 使用的类加载器
+     * @throws Exception
+     */
     public static URLClassLoader loadJar(File _jarFile) throws Exception {
-        // 创建一个URL对象，指向jar文件的路径
         URL url = _jarFile.toURI().toURL();
-        // 得到出程序类加载器
-        ClassLoader parentClassLoader = DefinedIM.class.getClassLoader();
-        // 创建一个URLClassLoader对象，传入url作为参数
-//        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url}, parentClassLoader);
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url}, ClassLoader.getSystemClassLoader());
-        // 创建一个List<Class<?>>对象，用于存放加载的类
-//        List<Class<?>> classes = new ArrayList<>();
-        // 判断url的协议是否是jar
-        if (/*url.getProtocol().equals("jar")*/true) {
-            // 获取jar文件对象
-            JarFile jarFile = new JarFile(_jarFile);
-            // 获取jar文件中的所有条目
-            Enumeration<JarEntry> entries = jarFile.entries();
-            // 遍历所有条目
-            while (entries.hasMoreElements()) {
-                // 获取一个条目
-                JarEntry jarEntry = entries.nextElement();
-                // 获取条目的名称
-                String entryName = jarEntry.getName();
-                // 判断是否是一个类文件，并且是否在指定的包名下
-                String lead = entryName.split("/")[0];
-                if (entryName.endsWith(".class") && lead.toLowerCase().equals(lead)) {
-                    // 获取类文件的全限定名
-                    String className = entryName.replace("/", ".").substring(0, entryName.length() - 6);
-                    // 使用URLClassLoader的loadClass方法来加载这个类文件
-                    Class<?> clazz = urlClassLoader.loadClass(className);
-                    // 将加载的类添加到List中
-//                    classes.add(clazz);
-//                    System.out.println(clazz.getName());
-                }
+        JarFile jarFile = new JarFile(_jarFile);
+        // 获取jar文件中的所有条目
+        Enumeration<JarEntry> entries = jarFile.entries();
+        // 遍历所有条目
+        while (entries.hasMoreElements()) {
+            // 获取一个条目
+            JarEntry jarEntry = entries.nextElement();
+            // 获取条目的名称
+            String entryName = jarEntry.getName();
+            // 判断是否是一个类文件，并且是否在指定的包名下
+            String lead = entryName.split("/")[0];
+            if (entryName.endsWith(".class") && lead.toLowerCase().equals(lead)) {
+                // 获取类文件的全限定名
+                String className = entryName.replace("/", ".").substring(0, entryName.length() - 6);
+                // 使用URLClassLoader的loadClass方法来加载这个类文件
+                Class<?> clazz = urlClassLoader.loadClass(className);
             }
         }
         // 返回加载的类列表
         return urlClassLoader;
     }
 
-
-    static boolean isValidJavaIdentifier(String className) {
-        //确定是否允许将指定字符作为 Java 标识符中的首字符。
-        if (className.length() == 0 || !Character.isJavaIdentifierStart(className.charAt(0))) {
-            return false;
-        }
-        String name = className.substring(1);
-        for (int i = 0; i < name.length(); i++) {
-            //确定指定字符是否可以是 Java 标识符中首字符以外的部分。
-            if (!Character.isJavaIdentifierPart(name.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+    public ArrayList<DefinedIMPlugin> getPluginList() {
+        return pluginList;
     }
-
 
 }

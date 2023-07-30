@@ -3,7 +3,8 @@ package org.definedim.plugin;
 import org.definedim.DefinedIMServer;
 
 public class DefinedIMPlugin {
-    public DefinedIMPluginConfig config; // 这项将会在插件加载的时候从plugin.json读取
+    DefinedIMPluginConfig config; // 这项将会在插件加载的时候从plugin.json读取
+
 
     private DefinedIMServer definedIMServer;
 

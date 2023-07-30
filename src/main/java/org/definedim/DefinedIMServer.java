@@ -42,6 +42,7 @@ public class DefinedIMServer{
 
     public void stop() {
         socketServer.stop();
+        System.out.println("Server stopped.");
     }
 
     private void startSocketServer() {
