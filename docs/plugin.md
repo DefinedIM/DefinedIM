@@ -6,7 +6,7 @@
 
 需要您实现一个继承自`org.definedim.plugin.DefinedIMPlugin`的类, 其中有一些函数需要实现:
 
-+ `void onRegister()`
++ `void onLoad()`
 + `void onReload()`
 + `void onExit()`
 
