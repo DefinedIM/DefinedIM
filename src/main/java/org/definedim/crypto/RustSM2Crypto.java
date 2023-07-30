@@ -12,7 +12,7 @@ public class RustSM2Crypto {
         if (OS.indexOf("windows") >= 0) {
             libFile = new File("./native/sm2_crypto.dll");
         } else if (OS.indexOf("linux") >= 0) {
-            libFile = new File("./native/sm2_crypto.so");
+            libFile = new File("./native/libsm2_crypto.so");
         } else {
             throw new NativeLoadingException("RustSM2Crypto: unsupported platform");
         }
