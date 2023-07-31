@@ -1,7 +1,7 @@
-extern crate core;
-
+use jni::objects::JByteArray;
 use jni::objects::JClass;
 use jni::objects::JString;
+use jni::sys::jint;
 use jni::JNIEnv;
 
 // Blake3 Hash
@@ -123,4 +123,70 @@ pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_decryptString<'
     return env
         .new_string(String::from_utf8(decrypted_data).unwrap())
         .unwrap();
+}
+
+// encrypt a byte array
+#[no_mangle]
+pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_encryptData<'a>(
+    mut env: JNIEnv<'a>,
+    _class: JClass<'a>,
+    public_key_java: JString<'a>,
+    raw_data: JByteArray<'a>,
+    length: jint,
+) -> JByteArray<'a> {
+    let ctx = SigCtx::new();
+    let public_key = ctx
+        .load_pubkey(
+            &env.get_string(&public_key_java)
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string()
+                .from_hex() // Hex to bytes
+                .unwrap(),
+        )
+        .unwrap();
+
+    let data = env
+        .convert_byte_array(raw_data)
+        .expect("Couldn't get data byte array");
+    let encrypt_ctx = EncryptCtx::new(length as usize, public_key);
+    let encrypted_data = encrypt_ctx.encrypt(data.as_slice()).unwrap();
+    println!("DEBUG HEX: {}", encrypted_data.as_slice().to_hex());
+    env.byte_array_from_slice(encrypted_data.as_slice())
+        .expect("Couldn't create byte array from slice")
+}
+
+// decrypt a byte array
+#[no_mangle]
+pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_decryptData<'a>(
+    mut env: JNIEnv<'a>,
+    _class: JClass<'a>,
+    secret_key_java: JString<'a>,
+    encrypted_data: JByteArray<'a>,
+    length: jint,
+) -> JByteArray<'a> {
+    let ctx = SigCtx::new();
+    let secret_key = ctx
+        .load_seckey(
+            &env.get_string(&secret_key_java)
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string()
+                .from_hex() // Hex to bytes
+                .unwrap(),
+        )
+        .unwrap();
+
+    let data = env
+        .convert_byte_array(encrypted_data)
+        .expect("Couldn't get data byte array");
+    let decrypt_ctx = DecryptCtx::new((length - 97) as usize, secret_key);
+    let binding = decrypt_ctx.decrypt(&data[..length as usize]).unwrap();
+    let raw_data: &[u8] = binding.as_slice();
+    let result = env
+        .byte_array_from_slice(raw_data)
+        .expect("Couldn't create byte array from slice");
+    result
 }
