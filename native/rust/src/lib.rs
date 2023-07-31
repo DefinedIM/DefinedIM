@@ -152,7 +152,6 @@ pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_encryptData<'a>
         .expect("Couldn't get data byte array");
     let encrypt_ctx = EncryptCtx::new(length as usize, public_key);
     let encrypted_data = encrypt_ctx.encrypt(data.as_slice()).unwrap();
-    println!("DEBUG HEX: {}", encrypted_data.as_slice().to_hex());
     env.byte_array_from_slice(encrypted_data.as_slice())
         .expect("Couldn't create byte array from slice")
 }
