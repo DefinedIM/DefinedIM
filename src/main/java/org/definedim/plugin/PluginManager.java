@@ -1,6 +1,7 @@
 package org.definedim.plugin;
 
 import com.alibaba.fastjson2.JSON;
+import org.apache.logging.log4j.Logger;
 import org.definedim.DefinedIM;
 import org.definedim.Main;
 
@@ -21,6 +22,8 @@ public class PluginManager {
     ArrayList<DefinedIMPlugin> pluginList = new ArrayList<>();
     int pluginCount = 0;
 
+    Logger logger = DefinedIM.definedIMServer.getLogger();
+
     /**
      * 加载./plugins/下的jar文件作为插件
      */
@@ -36,20 +39,20 @@ public class PluginManager {
             if (pluginfile.getName().endsWith(".jar")) {
                 if (loadPluginFile(pluginfile)) {
                     //
-                    System.out.println("loaded plugin " + pluginfile.getName());
+                    logger.info("loaded plugin " + pluginfile.getName());
                 } else {
-                    System.out.println("can't load jar file " + pluginfile.getName() + " as a plugin!");
+                    logger.warn("can't load jar file " + pluginfile.getName() + " as a plugin!");
                 }
             }
         }
 
         // 输出概要信息
-        System.out.println("loaded " + pluginCount + " plugins from ./plugins/ , listed here:");
+        logger.info("loaded " + pluginCount + " plugins from ./plugins/ , listed here:");
         if (pluginCount == 0) {
-            System.out.println("  (none)");
+            logger.info("  (none)");
         } else {
             for (int i = 0; i < pluginCount; i++) {
-                System.out.println("  " + (i + 1) + ". " + pluginList.get(i).config.name + ":" + pluginList.get(i).config.version);
+                logger.info("  " + (i + 1) + ". " + pluginList.get(i).config.name + ":" + pluginList.get(i).config.version);
             }
         }
 
@@ -85,7 +88,7 @@ public class PluginManager {
                     config = JSON.parseObject(content, DefinedIMPluginConfig.class);
                     if (config == null) {
                         // 此时无法解析配置的JSON文件
-                        System.out.println("plugin.json from " + pluginFile.getName() + " is illegal.");
+                        logger.error("plugin.json from " + pluginFile.getName() + " is illegal.");
                         return false;
                     }
                     break;
@@ -104,7 +107,7 @@ public class PluginManager {
                 return true;
             } else {
                 // 此时jar中没有plugin.json
-                System.out.println("can't find plugin.json in " + pluginFile.getName());
+                logger.error("can't find plugin.json in " + pluginFile.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,30 +125,31 @@ public class PluginManager {
     static URLClassLoader loadJar(File _jarFile) throws Exception {
         URL url = _jarFile.toURI().toURL();
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url}, ClassLoader.getSystemClassLoader());
-        JarFile jarFile = new JarFile(_jarFile);
-        // 获取jar文件中的所有条目
-        Enumeration<JarEntry> entries = jarFile.entries();
-        // 遍历所有条目
-        while (entries.hasMoreElements()) {
-            // 获取一个条目
-            JarEntry jarEntry = entries.nextElement();
-            // 获取条目的名称
-            String entryName = jarEntry.getName();
-            // 判断是否是一个类文件，并且是否在指定的包名下
-            String lead = entryName.split("/")[0];
-            if (entryName.endsWith(".class") && lead.toLowerCase().equals(lead)) {
-                // 获取类文件的全限定名
-                String className = entryName.replace("/", ".").substring(0, entryName.length() - 6);
-                // 使用URLClassLoader的loadClass方法来加载这个类文件
-                Class<?> clazz = urlClassLoader.loadClass(className);
-            }
-        }
+//        JarFile jarFile = new JarFile(_jarFile);
+//        // 获取jar文件中的所有条目
+//        Enumeration<JarEntry> entries = jarFile.entries();
+//        // 遍历所有条目
+//        while (entries.hasMoreElements()) {
+//            // 获取一个条目
+//            JarEntry jarEntry = entries.nextElement();
+//            // 获取条目的名称
+//            String entryName = jarEntry.getName();
+//            // 判断是否是一个类文件，并且是否在指定的包名下
+//            String lead = entryName.split("/")[0];
+//            if (entryName.endsWith(".class") && lead.toLowerCase().equals(lead)) {
+//                // 获取类文件的全限定名
+//                String className = entryName.replace("/", ".").substring(0, entryName.length() - 6);
+//                // 使用URLClassLoader的loadClass方法来加载这个类文件
+//                Class<?> clazz = urlClassLoader.loadClass(className);
+//            }
+//        }
         // 返回加载的类列表
         return urlClassLoader;
     }
 
     /**
      * 得到所有加载的插件
+     *
      * @return
      */
     public ArrayList<DefinedIMPlugin> getPluginList() {
