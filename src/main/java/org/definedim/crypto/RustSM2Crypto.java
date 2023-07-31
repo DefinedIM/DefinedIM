@@ -25,10 +25,10 @@ public class RustSM2Crypto {
     }
 
     /**
-     * @param str a string
-     * @return blake3 hash sum of the str
+     * @param source a byte array
+     * @return blake3 hash sum of the source
      */
-    public native String getBlake3Sum(String str);
+    public native String getBlake3Sum(byte[] source);
 
     /**
      * generate a new secret key

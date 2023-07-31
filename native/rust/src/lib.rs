@@ -8,11 +8,11 @@ use jni::JNIEnv;
 
 #[no_mangle]
 pub unsafe extern "C" fn Java_org_definedim_crypto_RustSM2Crypto_getBlake3Sum<'a>(
-    mut env: JNIEnv<'a>,
+    env: JNIEnv<'a>,
     _class: JClass<'a>,
-    j_str: JString<'a>,
+    source: JByteArray<'a>,
 ) -> JString<'a> {
-    let str = blake3::hash(env.get_string(&j_str).unwrap().to_bytes()).to_string();
+    let str = blake3::hash(env.convert_byte_array(source).expect("Couldn't get data byte array").as_slice()).to_string();
     return env.new_string(str).unwrap();
 }
 
