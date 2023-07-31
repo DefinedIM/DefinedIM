@@ -64,7 +64,7 @@ task buildNativeRust {
                 args '/c', "cd ${rootDir}\\native\\rust && cargo build"
                 standardOutput = out
         }
-        ant.move file: "${rootDir}\\native\\rust\\target\\debug\\sm2_crypto.dll",
+        ant.move file: "${rootDir}\\native\\rust\\target\\debug\\libsm2_crypto.dll",
                 todir: "${rootDir}\\native\\"
     } else {
 //        createDir "${rootDir}/bin/main/definedim/native/"
@@ -74,7 +74,7 @@ task buildNativeRust {
                 args '-c', "cd ${rootDir}/native/rust && cargo build"
                 standardOutput = out
         }
-        ant.move file: "${rootDir}/native/rust/target/debug/sm2_crypto.so",
+        ant.move file: "${rootDir}/native/rust/target/debug/libsm2_crypto.so",
                 todir: "${rootDir}/native/"
     }
 }
