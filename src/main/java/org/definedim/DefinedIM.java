@@ -15,6 +15,6 @@ public class DefinedIM {
     public static void run(){
         definedIMServer = new DefinedIMServer();
         definedIMServer.init();
-        definedIMServer.start();
+//        definedIMServer.start();
     }
 }

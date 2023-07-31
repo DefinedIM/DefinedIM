@@ -1,5 +1,7 @@
 package org.definedim;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.definedim.config.DefinedIMConfig;
 import org.definedim.crypto.RustSM2Crypto;
 import org.definedim.exception.NativeLoadingException;
@@ -11,26 +13,39 @@ import java.io.*;
 import java.net.Socket;
 
 public class DefinedIMServer {
-    public DefinedIMConfig definedIMConfig;
 
-    public SocketServer socketServer;
+    private Logger logger;
 
-    public RustSM2Crypto rustSM2Crypto;
+    private DefinedIMConfig definedIMConfig;
 
-    public PluginManager pluginManager;
+    private SocketServer socketServer;
+
+    private RustSM2Crypto rustSM2Crypto;
+
+    private PluginManager pluginManager;
 
     public void init() {
+        // 启动日志
+        File logDir = new File("./logs");
+        if (!logDir.exists()) {
+            logDir.mkdirs();
+        }
+        logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
         // 加载配置
+        logger.info("reading config.json");
         definedIMConfig = DefinedIMConfig.byJSONFile(new File("config.json"));
 
         // 加载native库
+        logger.info("loading native libs");
         try {
             rustSM2Crypto = new RustSM2Crypto();
         } catch (NativeLoadingException e) {
             throw new RuntimeException(e);
         }
 
-        //加载插件
+        // 加载插件
+        logger.info("loading plugins");
         pluginManager = new PluginManager();
         pluginManager.load();
 
@@ -43,12 +58,24 @@ public class DefinedIMServer {
     public void stop() {
         socketServer.stop();
         pluginManager.stop();
-        System.out.println("Server stopped.");
+        logger.info("Server stopped.");
     }
 
     private void startSocketServer() {
         socketServer = new SocketServer(definedIMConfig.socketPort, new DefinedIMSocketHandler());
         socketServer.start();
+    }
+
+    public DefinedIMConfig getDefinedIMConfig() {
+        return definedIMConfig;
+    }
+
+    public PluginManager getPluginManager() {
+        return pluginManager;
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 
 }
